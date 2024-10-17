@@ -1,0 +1,27 @@
+var body = $response.body;
+var url = $request.url;
+var obj = JSON.parse(body);
+
+const vip = '/user/getIndexUser';
+const course = '/course/getCourseDetails';
+const coursePeriod = '/course/getCoursePeriodList';
+const live = '/v2/live/getLiveDetails';
+
+if (url.indexOf(vip) != -1) {
+    obj.data.vipInfo.isVip = true;
+    obj.data.vipInfo.vipEndTime = "2099-12-31 23:59:59";
+    obj.data.vipInfo.vipLevel = 3;
+} else if (url.indexOf(course) != -1 || url.indexOf(coursePeriod) != -1 || url.indexOf(live) != -1) {
+    if (obj.data.hasOwnProperty('isBuy')) {
+        obj.data.isBuy = true;
+    }
+    if (obj.data.hasOwnProperty('isVip')) {
+        obj.data.isVip = true;
+    }
+    if (obj.data.hasOwnProperty('canWatch')) {
+        obj.data.canWatch = true;
+    }
+}
+
+body = JSON.stringify(obj);
+$done({body});
